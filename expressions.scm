@@ -2,7 +2,7 @@
   (cond ((number? exp) true)
         ((string? exp) true)
         (else false)))
-n
+
 (define (variable? exp) (symbol? exp))
 
 ;; the procedure indentifies lists beginning with a designated symbol
@@ -87,7 +87,7 @@ n
 (define (sequence->exp seq)
   (cond ((null? seq) seq)
         ((last-exp? seq) (first-exp seq))
-        ((else (make-begin seq)))))
+        (else (make-begin seq))))
 
 (define (make-begin seq) (cons 'begin seq))
 
@@ -130,7 +130,16 @@ n
 (define (cond->if exp)
   (expand-clauses (cond-clauses exp)))
 
-(define (expan-clauses clauses)
+(define (expand-clauses clauses)
   (if (null? clauses)
       'false
-      (let )))
+      (let ((first (car clauses))
+            (rest (cdr clauses)))
+        (if (cond-else-clause? first)
+            (if (null? rest)
+                (sequence->exp (cond-actions first))
+                (error "ELSE clause isn't last -- COND->IF"
+                       clauses))
+            (make-if (cond-predicate first)
+                     (sequence->exp (cond-actions first))
+                     (expand-clauses resr))))))
