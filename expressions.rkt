@@ -1,3 +1,4 @@
+#lang racket
 (define (self-evaluation ? exp)
   (cond ((number? exp) true)
         ((string? exp) true)

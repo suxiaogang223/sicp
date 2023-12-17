@@ -1,3 +1,4 @@
+#lang racket
 (define (eval exp env)
   (cond ((slef-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
