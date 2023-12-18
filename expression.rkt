@@ -1,16 +1,37 @@
-#lang racket
+#lang racket/base
 
 (provide self-evaluating?
          variable?
-         quote?
+         quoted?
+         text-of-quotation
          assignment?
+         assignment-variable
+         assignment-value
          definition?
+         definition-variable
+         definition-value
          if?
+         if-predicate
+         if-consequent
+         if-alternative
          lambda?
+         lambda-parameters
+         lambda-body
          begin?
+         begin-actions
+         last-exp?
+         first-exp
+         rest-exps
          cond?
-         application?)
+         cond->if
+         application?
+         operator
+         operands
+         no-operands?
+         first-operand
+         rest-operands)
 
+(require "bool.rkt")
 
 ;; number and string is self-evaluating
 (define (self-evaluating? exp)
@@ -28,7 +49,7 @@
 
 ;; quote
 ;; (quote <text-of-quotation>)
-(define (quote? exp)
+(define (quoted? exp)
   (tagged-list? exp 'quote))
 
 ;; exp must be quote, otherwise, unexpected results may occur
@@ -73,6 +94,7 @@
       (caddr exp)
       'false))
 
+;; used by cond->if
 (define (make-if predicate consequent alternative)
   (list 'if predicate consequent alternative))
 
@@ -84,6 +106,7 @@
 
 (define (lambda-body exp) (cddr exp))
 
+;; used by definition-value
 (define (make-lambda parameters body)
   (cons 'lambda (cons parameters body)))
 
@@ -93,7 +116,7 @@
 
 (define (begin-actions exp) (cdr exp))
 
-(define (last-exp? seq) (null? (cdr exp)))
+(define (last-exp? seq) (null? (cdr seq)))
 
 (define (first-exp seq) (car seq))
 
@@ -105,20 +128,6 @@
         (else (make-begin seq))))
 
 (define (make-begin seq) (cons 'begin seq))
-
-;; application
-;; (<operator> <operand1> <operand2> ...)
-(define (application? exp) (pair? exp))
-
-(define (operator exp) (car exp))
-
-(define (operands exp) (cdr exp))
-
-(define (no-operands? ops) (null? ops))
-
-(define (first-operand ops) (car ops))
-
-(define (rest-operands ops) (cdr ops))
 
 ;; cond
 ;; (cond [(> x 0) x]
@@ -158,3 +167,17 @@
             (make-if (cond-predicate first)
                      (sequence->exp (cond-actions first))
                      (expand-clauses rest))))))
+
+;; application
+;; (<operator> <operand1> <operand2> ...)
+(define (application? exp) (pair? exp))
+
+(define (operator exp) (car exp))
+
+(define (operands exp) (cdr exp))
+
+(define (no-operands? ops) (null? ops))
+
+(define (first-operand ops) (car ops))
+
+(define (rest-operands ops) (cdr ops))
