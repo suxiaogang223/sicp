@@ -31,6 +31,7 @@
          first-operand
          rest-operands)
 
+(require "utils.rkt")
 (require "bool.rkt")
 
 ;; number and string is self-evaluating
@@ -40,12 +41,6 @@
         [else false]))
 
 (define (variable? exp) (symbol? exp))
-
-;; the procedure indentifies lists beginning with a designated symbol
-(define (tagged-list? exp tag)
-  (if (pair? exp)
-      (eq? (car exp) tag)
-      false))
 
 ;; quote
 ;; (quote <text-of-quotation>)

@@ -2,7 +2,9 @@
 
 (provide eval)
 
+(require "bool.rkt")
 (require "expression.rkt")
+(require "procedure.rkt")
 (require "environment.rkt")
 
 (define (eval exp env)
@@ -29,7 +31,7 @@
 (define (apply procedure arguments)
   (cond [(primitive-procedure? procedure)
          (apply-primitive-procedure procedure arguments)]
-        [(comound-procedure? procedure)
+        [(compound-procedure? procedure)
          (eval-sequence
           (procedure-body procedure)
           (extend-environment
