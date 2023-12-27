@@ -12,6 +12,7 @@
          procedure-environment)
 
 (require "utils.rkt")
+(require "primitive-procedures.rkt")
 
 (define (primitive-procedure? proc)
   (tagged-list? proc 'primitive))
@@ -24,17 +25,11 @@
 
 (define apply-in-underlying-scheme apply)
 
-;; primitive procedures list
-(define primitive-procedures
-  (list (list 'car car)
-        (list 'cdr cdr)
-        (list 'cons cons)))
-
 (define (primitive-procedure-names)
   (map car primitive-procedures))
 
 (define (primitive-procedure-objects)
-  (map (lambda (proc) (list 'primitive (cadr proc)))
+  (map (lambda (proc) (list 'primitive (cdr proc)))
        primitive-procedures))
 
 (define (make-procedure parameters body env)

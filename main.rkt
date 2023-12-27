@@ -6,15 +6,17 @@
 
 (define the-global-environment (setup-environment))
 
-(define input-prompt ";;; M-Eval input:")
+(define hello-prompt "scheme v0.1")
 
-(define output-prompt ";;; M-Eval value:")
+(define input-prompt "> ")
+
+(define output-prompt "")
 
 (define (prompt-for-input string)
-  (newline) (newline) (display string) (newline))
+  (newline) (display string))
 
 (define (announce-output string)
-  (newline) (display string) (newline))
+  (display string))
 
 (define (user-print object)
   (if (compound-procedure? object)
@@ -33,4 +35,5 @@
   (driver-loop))
 
 ;; start point
+(display hello-prompt)
 (driver-loop)
